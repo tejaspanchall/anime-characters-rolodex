@@ -1,25 +1,70 @@
+import { Component } from 'react';
+
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
+class App extends Component {
+  constructor() {
+    super()
+  
+    this.state = {
+      animeChars: [],
+      searchField: '',
+    };
+    console.log('constructor');
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+    fetch('https://raw.githubusercontent.com/Savvytar/anime-characters-rolodex-mockend/main/.mockend.json')
+      .then((response) => response.json())
+      .then((users) => 
+        this.setState(
+          () => {
+            return { animeChars: users};
+          },
+          () => {
+            console.log(this.state);
+          }
+        )
+      );
+  }
+
+  onSearchChange= (event) => {
+    console.log(event.target.value);
+    const searchField = event.target.value.toLocaleLowerCase();
+    this.setState(() => {
+      return {searchField};
+    }); 
+  }
+
+  render() {
+    console.log('render');
+
+    const {animeChars, searchField} = this.state;
+    const {onSearchChange} = this;
+    const filteredAnimeChars = animeChars.filter((animeChar) => {
+      return animeChar.name.toLocaleLowerCase().includes(searchField);
+    });
+
+    return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        className='search-box'
+        type='search'
+        placeholder='Search anime characters'
+        onChange={onSearchChange}
+      />
+      {filteredAnimeChars.map((animeChars) => {
+          return (
+            <div key={animeChars.id}>
+              <h1>{animeChars.name}</h1>
+            </div>
+            );
+        })}                  
     </div>
   );
+}
 }
 
 export default App;
