@@ -1,6 +1,5 @@
+import axios from 'axios';
 import { Component } from 'react';
-
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
@@ -16,8 +15,7 @@ class App extends Component {
 
   componentDidMount() {
     console.log('componentDidMount');
-    fetch('https://raw.githubusercontent.com/Savvytar/anime-characters-rolodex-mockend/main/.mockend.json')
-      .then((response) => response.json())
+    axios.get('https://raw.githubusercontent.com/Savvytar/anime-characters-rolodex/main/.mockend.json')
       .then((users) => 
         this.setState(
           () => {
